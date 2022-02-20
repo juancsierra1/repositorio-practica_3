@@ -60,7 +60,7 @@ int main()
     switch (format) {
 
     case 1:{
-        int semillaf1=0,modo=1,i=0,numbin=0;
+        int semillaf1=0,modo=1,modo1=0,i=0,numbin=0;
         string nombin1=" ";
         cout<<"Ingresa tu semilla"<<endl;
         cout<<"¡Recuerdala!"<<endl;
@@ -69,8 +69,9 @@ int main()
         infABin(infACerr,bin,numelem);
         numbin=numElem(bin);
         while (i<numbin) {
+            modo1=tipo(bin,i,i+semillaf1);
             encrip(bin,i,i+semillaf1,modo);
-            modo=tipo(bin,i,i+semillaf1);
+            modo=modo1;
             i+=semillaf1;
 
         }
@@ -90,6 +91,7 @@ int main()
                 cout<<"Se produjo un error con el archivo de escritura"<<endl;
         }
     }
+        break;
     case 2:{
         int semillaf2=0,numbin;
         string nombin=" ";
