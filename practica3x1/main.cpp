@@ -68,12 +68,11 @@ int main()
         numelem=numElem(infACerr);
         infABin(infACerr,bin,numelem);
         numbin=numElem(bin);
-        int j=semillaf1;
         while (i<numbin) {
             encrip(bin,i,i+semillaf1,modo);
-            modo=tipo(bin,j,j+semillaf1);
+            modo=tipo(bin,i,i+semillaf1);
             i+=semillaf1;
-            j+=semillaf1;
+
         }
         cout<<"Ingresa el nombre del archivo donde deseas guardar tu informacion encriptada"<<endl;
         cout<<"Puedes ingresar el nombre o la direcion del archivo.txt"<<endl;
