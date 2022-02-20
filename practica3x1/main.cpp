@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 
 using namespace std;
 int numElem(char infor[]);
@@ -11,66 +12,118 @@ void desencrip2(char* ptr, int desde, int hasta);
 
 int main()
 {
-    char infor[20]={' '}, bin[100]={' '},info[20]={' '};
-    int numDelem=0;
-    cin.getline(infor,20);
-    numDelem=numElem(infor);
-    infABin(infor,bin,numDelem);
-    numDelem=numElem(bin);
-    binAIfo(bin,info,numDelem);
-    int x=0;
-    for(int i=0; i<numDelem; i++){
-        cout<<bin[i];
-        x++;
-        if(x==8){
-            cout<<endl;
-            x=0;
+    char infACerr[200]={' '},bin[1000];
+    string nombinf=" ",nombin=" ";
+    int format=0,numelem=0;
+    ofstream archivoEscritura;
+    ifstream archivoLectura;
+    cout<<"********BIENVENIDO*********"<<endl;
+    cout<<"********CERRADURA*********"<<endl;
+    cout<<"Con gusto podemos encriptar por ti"<<endl;
+    cout<<"Ingresa el nombre del archivo o la direcion del mismo:"<<endl;
+    cin>>nombinf;
+    try {
 
+        archivoLectura.open(nombinf);
+        if(!archivoLectura.is_open())
+            throw '1';
+
+        int i=0;
+        while (archivoLectura.good())
+           {
+            char temp=archivoLectura.get();
+           if( archivoLectura.good())
+               infACerr[i]=temp;
+           i++;
         }
+        archivoLectura.close();
 
-    }
-    cout<<endl;
-    numDelem=numElem(info);
-    for(int i=0; i<numDelem; i++){
-        cout<<info[i];
-    }
-    cout<<endl;
-    numDelem=tipo(bin,0,8);
-    cout<<numDelem;
-    cout<<endl;
-    numDelem=numElem(bin);
-    encrip2(bin,0,8);
-    for(int i=0; i<numDelem; i++){
-        cout<<bin[i];
-        x++;
-        if(x==8){
-            cout<<endl;
-            x=0;
+    }  catch (char c) {
 
+        if(c=='1')
+            cout<<"Se produjo un error con el archivo de lectura"<<endl;
+        else
+            cout<<"Se produjo un error inesperado"<<endl;
+    }
+
+    cout<<"****EXPLICACION****"<<endl;
+    cout<<"*Tienes a disposicion 2 formas de encriptar"<<endl;
+    cout<<"Por la seguridad de tu informacion no podemos darte a conocer las formas de encriptar"<<endl;
+    cout<<"*Para poder encriptar debe darnos a conocer un numero entero llamado <<SEMILLA>>"<<endl;
+    cout<<"Este se encargara de ayudarnos e encriptar por ti"<<endl;
+    cout<<endl<<endl<<endl;
+    cout<<"Formato 1"<<endl;
+    cout<<"Escribe----->1"<<endl;
+    cout<<"Formato 2"<<endl;
+    cout<<"Escribe----->2"<<endl;
+    cin>>format;
+    switch (format) {
+
+    case 1:{
+        int semillaf1=0,modo=1,i=0,numbin=0;
+        string nombin1=" ";
+        cout<<"Ingresa tu semilla"<<endl;
+        cout<<"¡Recuerdala!"<<endl;
+        cin>>semillaf1;
+        numelem=numElem(infACerr);
+        infABin(infACerr,bin,numelem);
+        numbin=numElem(bin);
+        int j=semillaf1;
+        while (i<numbin) {
+            encrip(bin,i,i+semillaf1,modo);
+            modo=tipo(bin,j,j+semillaf1);
+            i+=semillaf1;
+            j+=semillaf1;
+        }
+        cout<<"Ingresa el nombre del archivo donde deseas guardar tu informacion encriptada"<<endl;
+        cout<<"Puedes ingresar el nombre o la direcion del archivo.txt"<<endl;
+        cout<<"Recuerda si no tienes archivo crearemos uno por ti. Dinos el nombre?"<<endl;
+        cin>>nombin1;
+        try {
+            //Inicia la escritura
+            archivoEscritura.open(nombin1);
+            if(!archivoEscritura.is_open())
+                throw '1';
+            archivoEscritura << bin;
+            archivoEscritura.close();
+        }catch (char c) {
+            if(c=='1')
+                cout<<"Se produjo un error con el archivo de escritura"<<endl;
         }
     }
-    cout<<endl;
-    desencrip2(bin,0,8);
-    for(int i=0; i<numDelem; i++){
-        cout<<bin[i];
-        x++;
-        if(x==8){
-            cout<<endl;
-            x=0;
-
+    case 2:{
+        int semillaf2=0,numbin;
+        string nombin=" ";
+        cout<<"Ingresa tu semilla"<<endl;
+        cout<<"¡Recuerdala!"<<endl;
+        cin>>semillaf2;
+        numelem=numElem(infACerr);
+        infABin(infACerr,bin,numelem);
+        numbin=numElem(bin);
+        int i=0;
+        while (i<numbin) {
+            encrip2(bin,i,i+semillaf2);
+            i+=semillaf2;
+        }
+        cout<<"Ingresa el nombre del archivo donde deseas guardar tu informacion encriptada"<<endl;
+        cout<<"Puedes ingresar el nombre o la direcion del archivo.txt"<<endl;
+        cout<<"Recuerda si no tienes archivo crearemos uno por ti. Dinos el nombre?"<<endl;
+        cin>>nombin;
+        try {
+            //Inicia la escritura
+            archivoEscritura.open(nombin);
+            if(!archivoEscritura.is_open())
+                throw '1';
+            archivoEscritura << bin;
+            archivoEscritura.close();
+        }catch (char c) {
+            if(c=='1')
+                cout<<"Se produjo un error con el archivo de escritura"<<endl;
         }
     }
-    cout<<endl;
-    encrip(bin,0,8,1);
-    for(int i=0; i<numDelem; i++){
-        cout<<bin[i];
-        x++;
-        if(x==8){
-            cout<<endl;
-            x=0;
-
-        }
     }
+
+
 
     return 0;
 }
@@ -133,7 +186,7 @@ int tipo(char* ptr, int desde, int hasta){
     return tipo;
 }
 void encrip2(char* ptr, int desde, int hasta){
-    char aux=*(ptr + hasta);
+    char aux=*(ptr + hasta-1);
     for(int i=hasta-1; i>=desde; i--){
         *(ptr + i)=*(ptr + (i-1));
     }
@@ -196,6 +249,9 @@ void encrip(char* ptr, int desde, int hasta, int tipo){
     }
     }
 }
+
+
+
 
 
 
